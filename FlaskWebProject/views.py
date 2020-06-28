@@ -66,32 +66,32 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            app.logger.info('%s failed to log in, invalid username or password', form.username.data)
+            app.logger.info('User is unable to log in')
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        app.logger.info('%s successfully logged in', user.username)
+        app.logger.info('User logged in successfully')
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
         return redirect(next_page)
     session["state"] = str(uuid.uuid4())
     auth_url = _build_auth_url(scopes=Config.SCOPE, state=session["state"])
-    return render_template('login.html', title='Sign In', form=form ,auth_url=auth_url)
-
+	return render_template('login.html', title='Sign In', form=form ,auth_url=auth_url)
+	
 @app.route(Config.REDIRECT_PATH)  # Its absolute URL must match your app's redirect_uri set in AAD
 def authorized():
     if request.args.get('state') != session.get("state"):
         return redirect(url_for("home"))  # No-OP. Goes back to Index page
     if "error" in request.args:  # Authentication/Authorization failure
-        app.logger.info('%s failed to log in using microsoft account', user.username)
+        app.logger.info('User failed to login using microsoft account')
         return render_template("auth_error.html", result=request.args)
     if request.args.get('code'):
         cache = _load_cache()
         # Acquire a token from a built msal app, along with the appropriate redirect URI
         result = _build_msal_app(cache=cache).acquire_token_by_authorization_code(
             request.args['code'],
-            scopes=app.config['SCOPE'],  # Misspelled scope would cause an HTTP 400 error here
+            scopes=app.config['SCOPE'],
             redirect_uri=url_for("authorized", _external=True))
         if "error" in result:
             return render_template("auth_error.html", result=result)
@@ -101,7 +101,7 @@ def authorized():
         user = User.query.filter_by(username="admin").first()
         login_user(user)
         _save_cache(cache)
-        app.logger.info('%s logged in successfully', user.username)
+        app.logger.info('User logged in successfully')
     return redirect(url_for('home'))
 
 @app.route('/logout')

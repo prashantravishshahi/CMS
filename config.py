@@ -3,7 +3,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'secret-key'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'uKX6_E1sMzbK6D48V5-cAMaGn.Ym-eJZ.~'
 
     BLOB_ACCOUNT = os.environ.get('BLOB_ACCOUNT') or 'cmsv2computer'
     BLOB_STORAGE_KEY = os.environ.get('BLOB_STORAGE_KEY') or 'DaNzzSk5cK8Nz6KFEw76OS0i+sRN6und0Hl7XgUxwn0u5YAIc+bWpZJPzfaDNhTgxu68rXZjvEFrXcXcyHpDtQ=='
