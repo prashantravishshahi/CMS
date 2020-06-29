@@ -7,11 +7,16 @@ from config import Config
 from flask_login import LoginManager
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-
+import sys
 
 app = Flask(__name__)
 app.config.from_object(Config)
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
+handler = logging.StreamHandler(stream=sys.stdout)
+handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s in %(module)s: %(message)s"))
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+app.logger.info('CMS App Starts')
+
 
 Session(app)
 db = SQLAlchemy(app)
